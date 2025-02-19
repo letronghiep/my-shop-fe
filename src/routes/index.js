@@ -1,10 +1,14 @@
 import HomeLayout from "../layout/HomeLayout";
+import HomeLayoutNoSidebar from "../layout/HomeLayoutNoSidebar";
 import ShopLayout from "../layout/ShopLayout";
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
+import ProductByCategory from "../pages/product-by-category";
+import ProductInfo from "../pages/ProductInfo";
 import RegisterPage from "../pages/RegisterPage";
 import OrderListPage from "../pages/seller/order/OrderListPage";
 import ProductCreatePage from "../pages/seller/product/ProductCreatePage";
+import ProductEditPage from "../pages/seller/product/ProductEditPage";
 import ProductListPage from "../pages/seller/product/ProductListPage";
 import EditProfile from "../pages/seller/profile/edit/EditProfile";
 import SalePage from "../pages/seller/SalePage";
@@ -67,7 +71,21 @@ export const routes = [
     exact: true,
     private: false,
     layout: HomeLayout,
-    
+  },
+  {
+    path: "/:product_slug",
+    component: ProductInfo,
+    exact: true,
+    private: false,
+    layout: HomeLayoutNoSidebar,
+
+  },
+  {
+    path: "/category/:category_id",
+    component: ProductByCategory,
+    exact: true,
+    private: false,
+    layout: HomeLayout,
   },
   {
     path: "/login",
@@ -125,6 +143,14 @@ export const routes = [
   {
     path: "/seller/products/create",
     component: ProductCreatePage,
+    exact: true,
+    private: true,
+    layout: ShopLayout,
+    permission: "shop",
+  },
+  {
+    path: "/seller/products/edit/:productId",
+    component: ProductEditPage,
     exact: true,
     private: true,
     layout: ShopLayout,

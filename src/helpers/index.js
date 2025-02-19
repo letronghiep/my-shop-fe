@@ -17,3 +17,9 @@ export const checkMaxSizeFile = (file) => {
     return true;
   }
 };
+export const validateFormMoney = (money) => {
+  return money.toLocaleString("vi-VN");
+};
+export function modifyImageDimensions(url, newHeight, newWidth) {
+  return url.replace(/h_\d+,w_\d+/, `h_${newHeight},w_${newWidth}`);
+}

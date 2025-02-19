@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 :root {
-  font-family: "SF Pro Display", Arial, sans-serif;
+  font-family: "Roboto", Helvetica, sans-serif;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,7 +15,7 @@
   box-sizing: border-box;
 }
 html {
-  font-family: "SF Pro Display", Arial, sans-serif;
+  font-family: "Roboto", Helvetica, sans-serif;
 }
 body {
   background-color: #ececec;
@@ -39,4 +39,15 @@ body {
   width: 100%;
   display: flex;
   justify-content: center;
+}
+.product-card-meta-title {
+  max-height: 6em;
+  font-size: 16px;
+  line-height: 1.5em;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
 }

@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import HomeHeader from "../components/header/Header";
 import { getAuth } from "../stores/slices/authSlice";
-import CategoryMenu from "../components/sidebar/category-menu";
 
-function HomeLayout({ children }) {
+function HomeLayoutNoSidebar({ children }) {
   const { Content } = Layout;
   const {
     token: { borderRadiusLG },
@@ -50,7 +49,6 @@ function HomeLayout({ children }) {
             columnGap: "20px",
           }}
         >
-          <CategoryMenu />
           {children}
         </Layout>
       </Content>
@@ -58,4 +56,4 @@ function HomeLayout({ children }) {
   );
 }
 
-export default HomeLayout;
+export default HomeLayoutNoSidebar;

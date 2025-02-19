@@ -1,86 +1,82 @@
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
-import { Col, Flex, Row, Select } from "antd";
+import { Flex, Form, Select } from "antd";
 import { useState } from "react";
+import { Controller } from "react-hook-form";
 import SelectCustom from "../../../components/inputs/Select";
 
-function Attribute({ attributes, brands, control, attrName, brandName }) {
-  const { Option } = Select;
+function Attribute({ attributes, brands, control, brandName }) {
   const [maxSize, setMaxSize] = useState(9);
+  const { Option } = Select;
   return (
     <>
-      <Row gap={20} align="middle" justify="space-around">
-        <Col
-          span={10}
+      <Flex gap={10}>
+        <Form
           style={{
-            width: "100%",
-            marginBottom: "20px",
+            width: "90%",
+            margin: "0 auto",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            columnGap: 10,
+          }}
+          // name="dynamic_form_item"
+          initialValues={{ remember: true }}
+          layout="horizontal"
+          labelCol={{
+            span: 8,
+          }}
+          wrapperCol={{
+            span: 16,
           }}
         >
-          <Flex gap={10}>
-            <label
-              htmlFor="attribute"
-              className="flex-1 max-w-[150px] flex justify-end"
-            >
-              <span className="text-orange-500">* </span>{" "}
-              <span className="ml-1">Thương hiệu:</span>
-            </label>
+          <Form.Item label="Thương hiệu:">
             <SelectCustom
               keyField="brand_id"
               valueField="display_name"
               data={brands}
               name={brandName}
-              className="flex-[2]"
               control={control}
             />
-              {/* {brands.map((brand) => (
-                <Option key={brand.brand_id} value={brand.display_name}>
-                  {brand.display_name}
-                </Option>
-              ))} */}
-          </Flex>
-        </Col>
-        {attributes.map(
-          (attr, idx) =>
-            idx < maxSize && (
-              <Col
-                span={10}
-                key={attr.attribute_id}
-                style={{
-                  width: "100%",
-                  marginBottom: "20px",
-                }}
-              >
-                <Flex gap={10}>
-                  <label
-                    key={attr.attribute_id}
-                    className="flex-1 max-w-[150px] flex justify-end"
-                    htmlFor={attr.attribute_id}
-                  >
-                    {attr.display_name}
-                  </label>
-                  <SelectCustom
-                    keyField="attribute_id"
-                    valueField="display_name"
-                    data={attr.children}
-                    id={attr.attribute_id}
-                    className="flex-[2]"
+          </Form.Item>
+          {attributes.map(
+            (attr, idx) =>
+              idx < maxSize && (
+                <Form.Item
+                  colon={false}
+                  label={
+                    <span
+                      style={{
+                        whiteSpace: "normal",
+                        wordWrap: "break-word",
+                      }}
+                    >
+                      {attr.display_name}
+                    </span>
+                  }
+                  key={attr.attribute_id}
+                >
+                  <Controller
+                    name={`product_attributes.${idx}.${attr.display_name}`}
                     control={control}
-                    name={attrName}
-                  />
-                    {/* {attr.children.map((option) => (
-                      <Option
-                        key={option.attribute_id}
-                        id={attr.attribute_id}
-                        value={option.value_id}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        style={{ width: "100%" }}
+                        // mode="multiple"
+                        placeholder={`Chọn ${attr.display_name}`}
                       >
-                        {option.display_name}
-                      </Option>
-                    ))} */}
-                </Flex>
-              </Col>
-            )
-        )}
-      </Row>
+                        {attr.children.map((item) => (
+                          <Option key={item.value_id} value={item.value_id}>
+                            {item.display_name}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
+                  />
+                </Form.Item>
+              )
+          )}
+        </Form>
+      </Flex>
       {maxSize < attributes.length ? (
         <p
           onClick={() => setMaxSize(attributes.length)}

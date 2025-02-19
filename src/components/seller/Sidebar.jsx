@@ -84,7 +84,6 @@ const Sidebar = () => {
   const [open, setOpen] = useState(false);
 
   const onClick = (e) => {
-    console.log("click ", e);
     // setSelectedKey(e.key);
   };
   useEffect(() => {

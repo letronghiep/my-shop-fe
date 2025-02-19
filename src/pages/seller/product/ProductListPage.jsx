@@ -1,19 +1,14 @@
 import { Breadcrumb, Button, Flex, Input, Segmented, Typography } from "antd";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import ProductTable from "../../../components/table/ProductTable";
-import { useEffect, useState } from "react";
 import { getProductByShop } from "../../../services/product";
 
 function ProductListPage() {
   var { Title } = Typography;
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams("");
   const { Search } = Input;
   const [products, setProducts] = useState();
-  // useEffect(() => {
-  //   const params = new URLSearchParams(searchParams);
-  //   params.set("product_status", "all");
-  //   setSearchParams(params);
-  // }, []);
   useEffect(() => {
     async function fetchingProducts() {
       try {
@@ -25,7 +20,6 @@ function ProductListPage() {
     }
     fetchingProducts();
   }, [searchParams]);
-  console.log(products);
   const options = [
     {
       label: (

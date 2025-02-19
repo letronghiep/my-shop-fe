@@ -36,7 +36,6 @@ function ShopLayout({ children }) {
   const {
     token: { borderRadiusLG },
   } = theme.useToken();
-  // console.log("user", user);
   if (!user) return <SpinLoading />;
   return (
     <Layout>

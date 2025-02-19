@@ -159,15 +159,12 @@ function OrderListPage() {
   let placeholder = "Nhập mã vận đơn";
   const handleOk = () => {
     setConfirmLoading(true);
-    console.log("Clicked ok button");
-    console.log(datePicker);
     setTimeout(() => {
       setOpenModalBill(false);
       setConfirmLoading(false);
     }, 2000);
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpenModalBill(false);
   };
   const modalSelectBill = (
@@ -180,8 +177,6 @@ function OrderListPage() {
     >
       <RangePicker
         onChange={(value, dateString) => {
-          console.log("Selected Time: ", value);
-          console.log("Formatted Selected Time: ", dateString);
           setDatePicker({
             start: dateString[0],
             end: dateString[1],

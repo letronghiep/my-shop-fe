@@ -7,7 +7,6 @@ import { loginAuth } from "../stores/slices/authSlice";
 
 function LoginPage() {
   const { isAuthenticated, loading } = useSelector((state) => state.user);
-  console.log(isAuthenticated, loading);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onSubmit = async (data) => {

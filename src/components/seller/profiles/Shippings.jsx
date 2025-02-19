@@ -302,7 +302,6 @@ function Shippings({
         }
       } else {
         const res = await createShipping(formData);
-        console.log(res);
         if (res.status === 201) {
           setLoading(false);
           // handleOpenModal();

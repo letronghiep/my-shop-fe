@@ -26,6 +26,7 @@ function SelectCustom({
             placeholder={placeholder}
             style={{ width: "100%" }}
             className={className}
+            value={field?.value}
           >
             {data.map((item) => (
               <Select.Option value={item[keyField]} key={item[keyField]}>

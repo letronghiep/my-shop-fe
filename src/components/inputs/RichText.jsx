@@ -14,6 +14,7 @@ function RichText({ control, name, style }) {
             theme="snow"
             value={field.value}
             style={{ height: "85%" }}
+            onChange={field.onChange}
           />
           {fieldState.error && (
             <span style={{ color: "red", display: "block" }}>

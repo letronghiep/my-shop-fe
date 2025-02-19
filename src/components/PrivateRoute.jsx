@@ -7,7 +7,6 @@ function PrivateRoute({ element, allowRoutes }) {
   const role = user.user?.usr_role?.rol_name;
   const loading = useSelector((state) => state.user)?.loading;
   const hasPermission = allowRoutes.includes(role);
-  console.log(user, role, loading, hasPermission, allowRoutes);
   return hasPermission || loading ? (
     element
   ) : (

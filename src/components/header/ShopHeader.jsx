@@ -106,7 +106,6 @@ function ShopHeader({ bgColor = "#FFFFFF", user }) {
           left: "0",
           right: "0",
           zIndex: "100",
-
         }}
       >
         <Flex
