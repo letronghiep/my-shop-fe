@@ -45,6 +45,17 @@ export async function searchProductService(
     console.log(error);
   }
 }
+export async function getRelatedProducts(productId) {
+  try {
+    const res = await axiosInstance.get(
+      `${apiOrigin}/product/related/${productId}`
+    );
+    const data = await res.data;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
 export async function getInfoProduct(product_slug) {
   try {
     const res = await axiosInstance.get(

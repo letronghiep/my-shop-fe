@@ -1,19 +1,32 @@
-import { Breadcrumb, Rate, Skeleton, Typography } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  InputNumber,
+  Rate,
+  Skeleton,
+  Typography,
+} from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import ImageCarousel from "../components/ImageCarousel";
-import { getAllCommentForProduct } from "../services/comment";
-import { getInfoProduct } from "../services/product";
+import ProductSlide from "../components/product/product-slide";
+import ProductVariation from "../components/product/product-variations";
 import { validateFormMoney } from "../helpers";
+import { getAllCommentForProduct } from "../services/comment";
+import { getInfoProduct, getRelatedProducts } from "../services/product";
 
 function ProductInfo() {
   const { product_slug } = useParams();
   const [product, setProduct] = useState(null);
   const [comments, setComments] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState({});
+  const [productQuantity, setProductQuantity] = useState(1);
 
+  const increase = () => setProductQuantity(productQuantity + 1);
+  const decrease = () =>
+    setProductQuantity(productQuantity > 1 ? productQuantity - 1 : 1);
   useEffect(() => {
-    console.log(product_slug);
-    // Fetch product data from API and set it to state.
     async function fetchData() {
       try {
         const response = await getInfoProduct(product_slug);
@@ -27,15 +40,19 @@ function ProductInfo() {
   useEffect(() => {
     if (product) {
       // Fetch comments for the product from API and set them to state.
-      async function fetchComments() {
+      async function fetchData() {
         try {
-          const response = await getAllCommentForProduct(product._id);
-          setComments(response.metadata);
+          const [commentData, relatedData] = await Promise.all([
+            getAllCommentForProduct(product._id),
+            getRelatedProducts(product._id),
+          ]);
+          setComments(commentData.metadata);
+          setRelatedProducts(relatedData.metadata);
         } catch (error) {
           console.error(error);
         }
       }
-      fetchComments();
+      fetchData();
     }
   }, [product]);
   const breadcrumbs = useMemo(() => {
@@ -46,6 +63,15 @@ function ProductInfo() {
         title: category.category_name,
       }));
   }, [product]);
+  const selectedCombination = Object.values(selectedOptions).join(", ") || "";
+  const product_stock = useMemo(() => {
+    if (!product) return 0;
+    const foundModel = product.product_models.find(
+      (model) => model.sku_name === selectedCombination
+    );
+    if (foundModel) return foundModel.sku_stock;
+    else return product.product_quantity;
+  }, [selectedCombination]);
   if (!product) return <Skeleton />;
   return (
     <div>
@@ -133,7 +159,44 @@ function ProductInfo() {
               </p>
             )}
           </div>
+          <ProductVariation
+            variations={product.product_variations}
+            selectedOptions={selectedOptions}
+            setSelectedOptions={setSelectedOptions}
+          />
+          {/* <p>Bảng quy đổi kích thước</p> */}
+          <div className="my-6 flex items-center">
+            <span className="w-[100px]">Số lượng: </span>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                border: "1px solid #d9d9d9",
+                width: "120px",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button type="text" onClick={decrease} style={{ border: "none" }}>
+                -
+              </Button>
+              <InputNumber
+                value={productQuantity}
+                onChange={setProductQuantity}
+                min={1}
+                max={product_stock}
+                controls={false} // Ẩn nút tăng giảm mặc định
+                style={{ textAlign: "center", border: "none", width: "40px" }}
+              />
+              <Button type="text" onClick={increase} style={{ border: "none" }}>
+                +
+              </Button>
+            </div>
+            <p className="ml-4 text-sm text-neutral-600/70">{product_stock} Sản phẩm có sẵn</p>
+          </div>
         </div>
+      </div>
+      <div className="bg-white p-7 my-4">
+        <ProductSlide products={relatedProducts} title="Sản phẩm liên quan" />
       </div>
       <div className="bg-white p-7 my-4">
         <Typography.Title
@@ -146,21 +209,25 @@ function ProductInfo() {
         </Typography.Title>
         <div>
           <table className="w-full">
-            {Object.keys(product.product_attributes).map((key) => (
-              <tr key={key} className="mb-3 flex gap-x-4 py-2 px-2 text-base">
-                <td
-                  colSpan={4}
-                  className="flex justify-start  items-center min-w-[120px] max-w-[240px]"
-                >
-                  <p className="justify-start flex text-gray-600/70">{key}:</p>
-                </td>
-                <td colSpan={2} className="flex items-center">
-                  <p className="justify-start flex">
-                    {product.product_attributes[key]}
-                  </p>
-                </td>
-              </tr>
-            ))}
+            <tbody>
+              {Object.keys(product.product_attributes).map((key) => (
+                <tr key={key} className="mb-3 flex gap-x-4 py-2 px-2 text-base">
+                  <td
+                    colSpan={4}
+                    className="flex justify-start  items-center min-w-[120px] max-w-[240px]"
+                  >
+                    <p className="justify-start flex text-gray-600/70">
+                      {key}:
+                    </p>
+                  </td>
+                  <td colSpan={2} className="flex items-center">
+                    <p className="justify-start flex">
+                      {product.product_attributes[key]}
+                    </p>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
         <div className="mt-4">
@@ -186,7 +253,7 @@ function ProductInfo() {
         >
           Đánh giá sản phẩm
         </Typography.Title>
-
+          
         <div className="flex flex-col gap-y-4"></div>
       </div>
     </div>
